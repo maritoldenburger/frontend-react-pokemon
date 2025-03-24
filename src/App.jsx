@@ -3,6 +3,7 @@ import {useState, useEffect} from "react";
 import axios from "axios";
 import PokemonCard from "./components/pokemonCard/PokemonCard.jsx";
 import logo from "./assets/Pokemon_logo.png"
+import Button from "./components/Button/Button.jsx";
 
 function App() {
     const [pokemons, setPokemons] = useState([]);
@@ -15,7 +16,7 @@ function App() {
             try {
                 setLoading(true);
                 const response = await axios.get(endpoint);
-                setPokemons(response.data.results);
+                setPokemons(response.data);
             } catch (err) {
                 setError(err);
                 console.error(err)
@@ -30,15 +31,23 @@ function App() {
     return (
         <div className="outer-container">
             <img className="logo" src={logo} alt="Pokémon logo"/>
-            {loading && <p>Loading Pokémon...</p>}
-            {error && <p>Error: {error.message}</p>}
-            {!loading && !error && (
-                <div className="pokemon-deck">
-                    {pokemons.map((pokemon) => (
-                        <PokemonCard key={pokemon.name} endpoint={pokemon.url}/>
-                    ))}
-                </div>
-            )}
+            <div className="buttons">
+                <Button
+                text="Vorige"
+                disabled={!pokemons.previous}
+                clickHandler={() => setEndpoint(pokemons.previous)}/>
+                <Button
+                    text="Volgende"
+                    disabled={!pokemons.next}
+                    clickHandler={() => setEndpoint(pokemons.next)}/>
+            </div>
+            {loading && <div className="pokemon-spinner"></div>}
+            {error && <p>We kunnen op dit moment geen Pokémons vinden...</p>}
+            <div className="pokemon-deck">
+                {pokemons.results && pokemons.results.map((pokemon) => {
+                    return <PokemonCard key={pokemon.name} endpoint={pokemon.url}/>
+                })}
+            </div>
         </div>
     );
 }

@@ -25,7 +25,6 @@ const PokemonCard = ({endpoint}) => {
         if (endpoint) {
             fetchPokemon();
         }
-
     }, [endpoint])
 
     return (
@@ -55,9 +54,8 @@ const PokemonCard = ({endpoint}) => {
                     })}
                 </ul>
             </div>
-
         </div>
-    )
+    );
 }
 
 export default PokemonCard;
