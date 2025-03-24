@@ -1,6 +1,32 @@
 import "./PokemonCard.css"
+import {useEffect, useState} from "react";
+import axios from "axios";
 
-const PokemonCard = ({pokemon}) => {
+const PokemonCard = ({endpoint}) => {
+
+    const [pokemon, setPokemon] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchPokemon = async () => {
+            try {
+                setLoading(true);
+                const response = await axios.get(endpoint);
+                setPokemon(response.data);
+            } catch (err) {
+                setError(err);
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (endpoint) {
+            fetchPokemon();
+        }
+
+    }, [endpoint])
 
     return (
         <div className="pokemon-card">

@@ -5,16 +5,17 @@ import PokemonCard from "./components/pokemonCard/PokemonCard.jsx";
 import logo from "./assets/Pokemon_logo.png"
 
 function App() {
-    const [pokemon, setPokemon] = useState([]);
+    const [pokemons, setPokemons] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [endpoint, setEndpoint] = useState("https://pokeapi.co/api/v2/pokemon/");
 
     useEffect(() => {
-        const fetchPokemon = async () => {
+        const fetchPokemons = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get("https://pokeapi.co/api/v2/pokemon/jigglypuff");
-                setPokemon(response.data);
+                const response = await axios.get(endpoint);
+                setPokemons(response.data.results);
             } catch (err) {
                 setError(err);
                 console.error(err)
@@ -23,20 +24,23 @@ function App() {
             }
         }
 
-        fetchPokemon();
-    }, []);
+        fetchPokemons();
+    }, [endpoint]);
 
     return (
         <div className="outer-container">
-            <img className="logo" src={logo} alt="Pokémon logo"></img>
-            <div className="pokemon-deck">
-                <PokemonCard
-                    pokemon={pokemon}
-                />
-            </div>
+            <img className="logo" src={logo} alt="Pokémon logo"/>
+            {loading && <p>Loading Pokémon...</p>}
+            {error && <p>Error: {error.message}</p>}
+            {!loading && !error && (
+                <div className="pokemon-deck">
+                    {pokemons.map((pokemon) => (
+                        <PokemonCard key={pokemon.name} endpoint={pokemon.url}/>
+                    ))}
+                </div>
+            )}
         </div>
-
     );
 }
 
-export default App
+export default App;
