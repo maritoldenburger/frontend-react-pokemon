@@ -1,1 +1,21 @@
-/*Schrijf hier jouw eigen CSS!*/
+.outer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    border: dotted deeppink 2px;
+}
+
+.logo {
+    width: 400px;
+    margin: 20px 0;
+}
+
+.pokemon-deck {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1000px;
+    border: dotted blue 2px;
+}
