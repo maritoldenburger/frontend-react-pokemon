@@ -12,10 +12,15 @@ function App() {
     const [endpoint, setEndpoint] = useState("https://pokeapi.co/api/v2/pokemon/");
 
     useEffect(() => {
+
+        const controller = new AbortController();
+
         const fetchPokemons = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(endpoint);
+                const response = await axios.get(endpoint, {
+                    signal: controller.signal
+                });
                 setPokemons(response.data);
             } catch (err) {
                 setError(err);
@@ -26,6 +31,9 @@ function App() {
         }
 
         fetchPokemons();
+        return function cleanup() {
+            controller.abort();
+        }
     }, [endpoint]);
 
     return (
@@ -33,9 +41,9 @@ function App() {
             <img className="logo" src={logo} alt="Pokémon logo"/>
             <div className="buttons">
                 <Button
-                text="Vorige"
-                disabled={!pokemons.previous}
-                clickHandler={() => setEndpoint(pokemons.previous)}/>
+                    text="Vorige"
+                    disabled={!pokemons.previous}
+                    clickHandler={() => setEndpoint(pokemons.previous)}/>
                 <Button
                     text="Volgende"
                     disabled={!pokemons.next}
